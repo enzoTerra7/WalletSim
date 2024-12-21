@@ -1,0 +1,15 @@
+model Stocks {
+  id               Int    @id @default(autoincrement())
+  quantity         Int
+  name             String
+  ticket           String
+  averagePrice     Float
+  currentPrice     Float
+  profitPercentage Float  @default(0)
+  profit           Float  @default(0)
+  logo             String @default("")
+  wallet           Wallet @relation(fields: [walletId], references: [id])
+  walletId         Int
+
+  @@map(name: "stocks")
+}

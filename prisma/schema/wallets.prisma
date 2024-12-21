@@ -1,0 +1,15 @@
+model Wallet {
+  id               Int      @id @default(autoincrement())
+  name             String
+  user             Users    @relation(fields: [usersId], references: [id], onDelete: Cascade)
+  usersId          Int
+  Stocks           Stocks[]
+  availableCash    Float
+  monthlyAport     Float    @default(0)
+  currentAmount    Float    @default(0)
+  profits          Float    @default(0)
+  invested         Float    @default(0)
+  profitPercentage Float    @default(0)
+
+  @@map(name: "wallets")
+}
