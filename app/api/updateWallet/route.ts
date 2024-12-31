@@ -1,6 +1,6 @@
 import { db } from "@/db";
 
-export default async function GET() {
+export async function GET() {
   try {
     const wallets = await db.wallet.findMany();
 
@@ -20,5 +20,20 @@ export default async function GET() {
         },
       });
     }
-  } catch {}
+    return Response.json(
+      {
+        message: "Wallet updated",
+      },
+      {
+        status: 200,
+      }
+    );
+  } catch {
+    return Response.json(
+      {
+        message: "Wallet not updated",
+      },
+      { status: 500 }
+    );
+  }
 }

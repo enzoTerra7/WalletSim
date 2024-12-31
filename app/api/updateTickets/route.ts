@@ -4,7 +4,7 @@ import { StockByIdResponse } from "@/trpc/routes/tickets/types";
 
 const ticket: Array<StockByIdResponse> = [];
 
-export default async function GET() {
+export async function GET() {
   try {
     const users = await db.users.findMany();
 
@@ -106,6 +106,22 @@ export default async function GET() {
           }
         }
       });
+
+      return Response.json(
+        {
+          message: "Tickets updated",
+        },
+        {
+          status: 200,
+        }
+      );
     }
-  } catch {}
+  } catch {
+    return Response.json(
+      {
+        message: "Tickets not updated",
+      },
+      { status: 500 }
+    );
+  }
 }

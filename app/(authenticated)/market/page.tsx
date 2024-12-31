@@ -2,6 +2,7 @@ import { Globe, Landmark, PiggyBank } from "lucide-react";
 import { MarketTypeCard } from "./_components/type-card";
 import Link from "next/link";
 import { MainStocksList } from "./_components/lists";
+import { Suspense } from "react";
 
 export default function MarketPage() {
   return (
@@ -35,7 +36,9 @@ export default function MarketPage() {
           />
         </Link>
       </div>
-      <MainStocksList />
+      <Suspense fallback={<div></div>}>
+        <MainStocksList />
+      </Suspense>
     </main>
   );
 }
