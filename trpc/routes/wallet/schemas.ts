@@ -13,3 +13,7 @@ export const ExchangeTicketSchema = y.object({
   logo: y.string().required(),
   name: y.string().required(),
 });
+
+export const DeleteWalletSchema = y.object({
+  id: y.number().required(),
+});

@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import { cookies } from "next/headers";
 
 export function verifyToken(token: string) {
   try {
@@ -9,22 +8,6 @@ export function verifyToken(token: string) {
     return undefined;
   }
 }
-
-export async function getToken() {
-  const usableCookies = await cookies();
-
-  const authenticatedCookie = usableCookies.get("token");
-
-  if (
-    authenticatedCookie?.value &&
-    authenticatedCookie?.value.split(" ")[0] === "Bearer"
-  ) {
-    const token = authenticatedCookie.value.split(" ")[1];
-    return token;
-  }
-  return null;
-}
-
 export async function generateJwt(obj: JWTBasic) {
   const token = jwt.sign(obj, process.env.NEXT_PUBLIC_JWT_SECRET!);
   return token;

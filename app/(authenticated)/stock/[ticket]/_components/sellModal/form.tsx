@@ -7,7 +7,6 @@ import { formatCurrency } from "@/lib/formatters";
 import { Stocks } from "@prisma/client";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { setCookie } from "cookies-next";
-import { useRouter } from "next/navigation";
 import { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -29,27 +28,20 @@ export function SellTicketForm({
   >;
   stock: Stocks;
 }) {
-  const router = useRouter();
   const quantity = methods.watch("quantity");
   const currentPrice = methods.watch("currentPrice");
 
-  const { refetch } = trpc.user.getMe.useQuery(undefined, {
-    enabled: false,
-  });
   const { mutate: invest } = trpc.wallet.postNewSell.useMutation({
-    onSuccess: async () => {
-      const { data } = await refetch();
-
-      if (!data) {
-        return;
-      }
-
+    onSuccess: async (data) => {
       setCookie("token", data.data.token, {
         maxAge: 60 * 60 * 24,
       });
-      setCookie("user", JSON.stringify(data.data.user));
+      setCookie("user", JSON.stringify(data.data.user), {
+        maxAge: 60 * 60 * 24,
+      });
       toast.success("Investimento realizado com sucesso!");
-      router.refresh();
+
+      window.location.reload();
     },
     onError: (error) => {
       toast.error(error.message);

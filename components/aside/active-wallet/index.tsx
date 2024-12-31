@@ -54,6 +54,11 @@ export async function ActiveWallet() {
                 <WalletCard hasActionCall {...wallet} />
               </DropdownMenuItem>
             ))}
+            {availableWallets.length === 0 && (
+              <p className="text-sm text-balance text-center text-muted-foreground">
+                Você não possui carteiras disponíveis
+              </p>
+            )}
             <DropdownMenuSeparator />
             <Link href="/auth/wallet-create">
               <DropdownMenuItem className="cursor-pointer">

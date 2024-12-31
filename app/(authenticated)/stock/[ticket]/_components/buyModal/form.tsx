@@ -7,7 +7,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { formatCurrency } from "@/lib/formatters";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { setCookie } from "cookies-next";
-import { useRouter } from "next/navigation";
 import { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -27,28 +26,18 @@ export function BuyTicketForm({
     undefined
   >;
 }) {
-  const router = useRouter();
   const { data } = trpc.user.getCurrentWallet.useQuery();
   const quantity = methods.watch("quantity");
   const currentPrice = methods.watch("currentPrice");
 
-  const { refetch } = trpc.user.getMe.useQuery(undefined, {
-    enabled: false,
-  });
   const { mutate: invest } = trpc.wallet.postNewInvestment.useMutation({
-    onSuccess: async () => {
-      const { data } = await refetch();
-
-      if (!data) {
-        return;
-      }
-
+    onSuccess: async (data) => {
       setCookie("token", data.data.token, {
         maxAge: 60 * 60 * 24,
       });
       setCookie("user", JSON.stringify(data.data.user));
       toast.success("Investimento realizado com sucesso!");
-      router.refresh();
+      window.location.reload();
     },
     onError: (error) => {
       toast.error(error.message);

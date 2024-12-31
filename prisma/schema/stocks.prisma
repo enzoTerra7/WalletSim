@@ -8,7 +8,7 @@ model Stocks {
   profitPercentage Float  @default(0)
   profit           Float  @default(0)
   logo             String @default("")
-  wallet           Wallet @relation(fields: [walletId], references: [id])
+  wallet           Wallet @relation(fields: [walletId], references: [id], onDelete: Cascade)
   walletId         Int
 
   @@map(name: "stocks")

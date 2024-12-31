@@ -1,5 +1,9 @@
 import { privateProcedure, router } from "@/trpc/trpc";
-import { CreateWalletSchema, ExchangeTicketSchema } from "./schemas";
+import {
+  CreateWalletSchema,
+  DeleteWalletSchema,
+  ExchangeTicketSchema,
+} from "./schemas";
 import { db } from "@/db";
 import { TRPCError } from "@trpc/server";
 import { generateJwt } from "@/lib/session";
@@ -13,7 +17,6 @@ export const walletRouter = router({
       const wallet = await db.wallet.create({
         data: {
           ...input,
-          currentAmount: input.availableCash,
           usersId: ctx.userId,
         },
       });
@@ -169,10 +172,10 @@ export const walletRouter = router({
             });
           }
 
-          const newInvested =
-            wallet.invested + stock.averagePrice * stock.quantity;
-          const newCurrentAmount =
-            wallet.currentAmount + stock.averagePrice * stock.quantity;
+          const moneyUsed = stock.averagePrice * stock.quantity;
+
+          const newInvested = wallet.invested + moneyUsed;
+          const newCurrentAmount = wallet.currentAmount + moneyUsed;
 
           const newProfitPercentage =
             (newCurrentAmount * 100) / newInvested - 100;
@@ -191,17 +194,41 @@ export const walletRouter = router({
           return { stock, wallet: updatedWallet };
         });
 
+        const user = await db.users.findUnique({
+          where: {
+            id: ctx.userId,
+          },
+          select: defaultUsersSelect,
+        });
+
+        if (!user) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "User not found",
+          });
+        }
+
+        const token = await generateJwt({
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          wallets: user.Wallet,
+          activeWallet: user.activeWallet,
+          hasWallet: user.Wallet.length > 0,
+        });
+
         return {
           success: true,
           statusCode: 200,
-          message: "Stock invested successful",
-          data: { ...newStocksAndWallet },
+          message: "Stock sell successful",
+          data: { user, token, stock: newStocksAndWallet },
         };
       }
 
+      const moneyUsed = input.currentPrice * input.quantity;
+
       const newAveragePrice =
-        (currentStock.averagePrice * currentStock.quantity +
-          input.currentPrice * input.quantity) /
+        (currentStock.averagePrice * currentStock.quantity + moneyUsed) /
         (currentStock.quantity + input.quantity);
 
       const newProfit = input.currentPrice - newAveragePrice;
@@ -232,10 +259,8 @@ export const walletRouter = router({
           });
         }
 
-        const newWalletInvested =
-          wallet.invested + stock.averagePrice * stock.quantity;
-        const newWalletCurrentAmount =
-          wallet.currentAmount + stock.averagePrice * stock.quantity;
+        const newWalletInvested = wallet.invested + moneyUsed;
+        const newWalletCurrentAmount = wallet.currentAmount + moneyUsed;
 
         const newWalletProfitPercentage =
           (newWalletCurrentAmount * 100) / newWalletInvested - 100;
@@ -243,7 +268,7 @@ export const walletRouter = router({
         const updatedWallet = await tx.wallet.update({
           where: { id: stock.walletId },
           data: {
-            availableCash: { decrement: stock.quantity * stock.averagePrice },
+            availableCash: { decrement: input.quantity * input.currentPrice },
             invested: newWalletInvested,
             currentAmount: newWalletCurrentAmount,
             profitPercentage: newWalletProfitPercentage,
@@ -254,11 +279,34 @@ export const walletRouter = router({
         return { stock, wallet: updatedWallet };
       });
 
+      const user = await db.users.findUnique({
+        where: {
+          id: ctx.userId,
+        },
+        select: defaultUsersSelect,
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      const token = await generateJwt({
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        wallets: user.Wallet,
+        activeWallet: user.activeWallet,
+        hasWallet: user.Wallet.length > 0,
+      });
+
       return {
         success: true,
         statusCode: 200,
-        message: "Stock invested successful",
-        data: { ...newStocksAndWallet },
+        message: "Stock sell successful",
+        data: { user, token, stock: newStocksAndWallet },
       };
     }),
 
@@ -308,7 +356,6 @@ export const walletRouter = router({
       }
 
       if (input.quantity === currentStock.quantity) {
-        console.log("entrou aqui");
         const newStocksAndWallet = await db.$transaction(async (tx) => {
           const stock = await tx.stocks.delete({
             where: {
@@ -327,10 +374,10 @@ export const walletRouter = router({
             });
           }
 
-          const newInvested =
-            wallet.invested - stock.averagePrice * stock.quantity;
-          const newCurrentAmount =
-            wallet.currentAmount - stock.averagePrice * stock.quantity;
+          const moneyUsed = stock.currentPrice * stock.quantity;
+
+          const newInvested = wallet.invested - moneyUsed;
+          const newCurrentAmount = wallet.currentAmount - moneyUsed;
 
           const newProfitPercentage =
             (newCurrentAmount * 100) / newInvested - 100;
@@ -349,13 +396,38 @@ export const walletRouter = router({
           return { stock, wallet: updatedWallet };
         });
 
+        const user = await db.users.findUnique({
+          where: {
+            id: ctx.userId,
+          },
+          select: defaultUsersSelect,
+        });
+
+        if (!user) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "User not found",
+          });
+        }
+
+        const token = await generateJwt({
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          wallets: user.Wallet,
+          activeWallet: user.activeWallet,
+          hasWallet: user.Wallet.length > 0,
+        });
+
         return {
           success: true,
           statusCode: 200,
-          message: "Stock invested successful",
-          data: { ...newStocksAndWallet },
+          message: "Stock sell successful",
+          data: { user, token, stock: newStocksAndWallet },
         };
       }
+
+      const moneyUsed = input.currentPrice * input.quantity;
 
       const newProfit = input.currentPrice - currentStock.averagePrice;
       const newProfitPercentage = (newProfit / currentStock.averagePrice) * 100;
@@ -384,10 +456,8 @@ export const walletRouter = router({
           });
         }
 
-        const newWalletInvested =
-          wallet.invested - stock.averagePrice * stock.quantity;
-        const newWalletCurrentAmount =
-          wallet.currentAmount - stock.averagePrice * stock.quantity;
+        const newWalletInvested = wallet.invested - moneyUsed;
+        const newWalletCurrentAmount = wallet.currentAmount - moneyUsed;
 
         const newWalletProfitPercentage =
           (newWalletCurrentAmount * 100) / newWalletInvested - 100;
@@ -395,7 +465,7 @@ export const walletRouter = router({
         const updatedWallet = await tx.wallet.update({
           where: { id: stock.walletId },
           data: {
-            availableCash: { increment: stock.quantity * input.currentPrice },
+            availableCash: { increment: input.quantity * input.currentPrice },
             invested: newWalletInvested,
             currentAmount: newWalletCurrentAmount,
             profitPercentage: newWalletProfitPercentage,
@@ -406,11 +476,124 @@ export const walletRouter = router({
         return { stock, wallet: updatedWallet };
       });
 
+      const user = await db.users.findUnique({
+        where: {
+          id: ctx.userId,
+        },
+        select: defaultUsersSelect,
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      const token = await generateJwt({
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        wallets: user.Wallet,
+        activeWallet: user.activeWallet,
+        hasWallet: user.Wallet.length > 0,
+      });
+
       return {
         success: true,
         statusCode: 200,
         message: "Stock sell successful",
-        data: { ...newStocksAndWallet },
+        data: { user, token, stock: newStocksAndWallet },
+      };
+    }),
+
+  deleteWallet: privateProcedure
+    .input(DeleteWalletSchema)
+    .mutation(async ({ ctx, input }) => {
+      const wallet = await db.wallet.findUnique({
+        where: {
+          id: ctx.activeWalletId,
+          AND: {
+            usersId: ctx.userId,
+          },
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (!wallet) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Wallet not found",
+        });
+      }
+
+      await db.wallet.delete({
+        where: {
+          id: input.id,
+        },
+      });
+
+      const user = await db.users.findUnique({
+        where: {
+          id: ctx.userId,
+        },
+        select: defaultUsersSelect,
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      const userWallets = user.Wallet.filter(
+        (wallet) => wallet.id !== input.id
+      );
+
+      if (userWallets.length <= 0) {
+        return {
+          success: true,
+          statusCode: 200,
+          message: "Wallet deleted successful",
+          data: {
+            sendToWalletCreation: true,
+            user,
+            token: "",
+          },
+        };
+      }
+
+      const newUser = await db.users.update({
+        where: {
+          id: ctx.userId,
+        },
+        data: {
+          activeWallet: userWallets[0].id,
+        },
+        select: defaultUsersSelect,
+      });
+
+      const token = await generateJwt({
+        id: newUser.id,
+        email: newUser.email,
+        name: newUser.name,
+        wallets: newUser.Wallet,
+        activeWallet: newUser.activeWallet,
+        hasWallet: newUser.Wallet.length > 0,
+      });
+
+      return {
+        success: true,
+        statusCode: 200,
+        message: "Wallet deleted successful",
+        data: {
+          sendToWalletCreation: false,
+          user: newUser,
+          token,
+        },
       };
     }),
 

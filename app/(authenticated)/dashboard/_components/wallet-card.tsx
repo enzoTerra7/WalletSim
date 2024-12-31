@@ -12,9 +12,9 @@ export function DashboardWalletCard(props: WalletCard) {
       <div className="size-12 shrink-0 rounded-full flex items-center justify-center border border-border bg-background text-primary">
         <props.Icon className="size-6" />
       </div>
-      <div className="flex-1-text-start text-card-foreground space-y-1">
+      <div className="flex-1 text-start truncate text-card-foreground space-y-1">
         <p className="text-xs font-medium">{props.name}</p>
-        <p className="text-3xl font-bold">{props.currentAmount}</p>
+        <p className="text-2xl font-bold truncate">{props.currentAmount}</p>
       </div>
     </div>
   );

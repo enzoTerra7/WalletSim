@@ -6,6 +6,7 @@ import { DashboardWalletCard } from "../dashboard/_components/wallet-card";
 import { Banknote, ChartCandlestick, DollarSign, Percent } from "lucide-react";
 import { MyStocksList } from "./_components/stocksList";
 import { EmptyStocks } from "./_components/emptyStocks";
+import { DeleteWalletButton } from "./_components/deleteWallet";
 
 export default async function MyWalletPage() {
   const { getUser } = GetUserAuthentication();
@@ -26,6 +27,7 @@ export default async function MyWalletPage() {
 
   return (
     <main className="w-full flex items-start justify-start flex-col gap-8 py-16 xl:px-28">
+      <DeleteWalletButton walletId={wallet.id} />
       <div className="flex items-center justify-between w-full gap-4">
         <h1 className="text-2xl text-foreground font-medium">{wallet.name}</h1>
         <p
