@@ -23,7 +23,7 @@ export function Providers({ children }: PropsWithChildren) {
             url: "http://localhost:3000/api/trpc",
           }),
           false: httpBatchLink({
-            url: "http://wallet-sim.vercel.app/api/trpc",
+            url: "https://wallet-sim.vercel.app/api/trpc",
           }),
         }),
       ],
