@@ -14,7 +14,7 @@ export async function GET() {
           id: wallet.id,
         },
         data: {
-          currentAmount: {
+          availableCash: {
             increment: wallet.monthlyAport,
           },
         },

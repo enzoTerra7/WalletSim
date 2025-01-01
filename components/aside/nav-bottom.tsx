@@ -13,7 +13,7 @@ export function NavBottom() {
   function handleLogout() {
     deleteCookie("token");
     deleteCookie("user");
-    router.push("/aut/login");
+    router.push("/auth/login");
   }
   return (
     <div className="border-t space-y-3 border-border shrink-0 p-4">
