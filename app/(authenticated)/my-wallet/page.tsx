@@ -1,5 +1,5 @@
 import { GetUserAuthentication } from "@/hooks/getUser";
-import { formatCurrency } from "@/lib/formatters";
+import { formatCurrency, formatPercentage } from "@/lib/formatters";
 import { cn, handleWalletColorsBalance } from "@/lib/utils";
 import { deleteCookie } from "cookies-next";
 import { DashboardWalletCard } from "../dashboard/_components/wallet-card";
@@ -24,6 +24,8 @@ export default async function MyWalletPage() {
     wallet.invested,
     wallet.currentAmount
   );
+
+  console.log("wallet", wallet);
 
   return (
     <main className="w-full flex items-start justify-start flex-col gap-8 py-16 xl:px-28">
@@ -55,7 +57,7 @@ export default async function MyWalletPage() {
         <DashboardWalletCard
           Icon={Percent}
           name="Percentual de lucro"
-          currentAmount={formatCurrency(wallet.profitPercentage || 0)}
+          currentAmount={formatPercentage(wallet.profitPercentage || 0)}
         />
         <DashboardWalletCard
           Icon={ChartCandlestick}

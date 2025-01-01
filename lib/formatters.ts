@@ -6,6 +6,12 @@ export function formatCurrency(value: number) {
   }).format(value);
 }
 
+export function formatPercentage(value: number | string) {
+  const formattedValue = Number(value);
+
+  return formattedValue.toFixed(2).replace(".", ",") + "%";
+}
+
 export function handleStockTypes(value: string) {
   const formattedValue = value.toLowerCase();
 
