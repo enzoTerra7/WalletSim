@@ -85,7 +85,7 @@ export async function GET() {
           where: { id: user.activeWallet },
           data: {
             currentAmount: { increment: newCurrentAmount },
-            profits: { increment: totalProfitDelta },
+            profits: { increment: (totalProfitDelta - wallet.invested) * -1 },
             profitPercentage: (newProfitPercentage + 100) * -1,
           },
         });

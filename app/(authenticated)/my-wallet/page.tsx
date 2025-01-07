@@ -38,7 +38,7 @@ export default async function MyWalletPage() {
             textClass
           )}
         >
-          {formatCurrency(wallet.invested || 0)}
+          {formatCurrency(wallet.currentAmount || 0)}
           <Icon className="size-6 inline-block shrink-0" />
         </p>
       </div>
