@@ -78,9 +78,7 @@ export async function GET() {
 
         // Calcula o novo profitPercentage
         const newProfitPercentage =
-          wallet.invested > 0
-            ? ((newProfits / wallet.invested) * 100 - 100) * -1
-            : 0;
+          wallet.invested > 0 ? (newProfits / wallet.invested) * 100 : 0;
 
         // Atualiza a carteira
         await tx.wallet.update({
@@ -88,7 +86,7 @@ export async function GET() {
           data: {
             currentAmount: { increment: newCurrentAmount },
             profits: { increment: totalProfitDelta },
-            profitPercentage: newProfitPercentage,
+            profitPercentage: (newProfitPercentage + 100) * -1,
           },
         });
       });
