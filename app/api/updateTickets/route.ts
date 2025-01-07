@@ -84,7 +84,7 @@ export async function GET() {
         await tx.wallet.update({
           where: { id: user.activeWallet },
           data: {
-            currentAmount: { increment: newCurrentAmount },
+            currentAmount: newCurrentAmount,
             profits: { increment: (totalProfitDelta - wallet.invested) * -1 },
             profitPercentage: (newProfitPercentage + 100) * -1,
           },
