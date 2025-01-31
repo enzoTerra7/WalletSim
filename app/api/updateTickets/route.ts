@@ -44,13 +44,9 @@ export async function GET() {
           const profitPercentage =
             ((marketChange - stock.averagePrice) * 100) / stock.averagePrice;
 
-          const oldTotalStockUsed = stock.averagePrice * stock.quantity;
           const newTotalStockUsed = marketPrice * stock.quantity;
 
-          // Calcula as variações para a carteira
-          const currentAmountDelta = newTotalStockUsed - oldTotalStockUsed;
-
-          totalCurrentAmountDelta += currentAmountDelta;
+          totalCurrentAmountDelta += newTotalStockUsed;
 
           // Atualiza a ação
           await tx.stocks.update({
@@ -70,7 +66,7 @@ export async function GET() {
           where: { id: user.activeWallet },
         });
 
-        const newCurrentAmount = wallet.currentAmount + totalCurrentAmountDelta;
+        const newCurrentAmount = totalCurrentAmountDelta;
         const newProfits = newCurrentAmount - wallet.invested;
 
         // Calcula o novo profitPercentage
