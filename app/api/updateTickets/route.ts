@@ -23,7 +23,6 @@ export async function GET() {
 
       // Atualizar as ações e a carteira em uma transação
       await db.$transaction(async (tx) => {
-        let totalProfitDelta = 0; // Soma das variações de lucro para recalcular a wallet
         let totalCurrentAmountDelta = 0; // Soma das alterações em currentAmount
 
         const updates = stocks.map(async (stock) => {
@@ -50,10 +49,8 @@ export async function GET() {
 
           // Calcula as variações para a carteira
           const currentAmountDelta = newTotalStockUsed - oldTotalStockUsed;
-          const profitDelta = newProfit - stock.profit;
 
           totalCurrentAmountDelta += currentAmountDelta;
-          totalProfitDelta += profitDelta;
 
           // Atualiza a ação
           await tx.stocks.update({
