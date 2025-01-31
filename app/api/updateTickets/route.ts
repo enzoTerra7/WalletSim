@@ -73,20 +73,20 @@ export async function GET() {
           where: { id: user.activeWallet },
         });
 
-        const newProfits = wallet.profits + totalProfitDelta;
         const newCurrentAmount = wallet.currentAmount + totalCurrentAmountDelta;
+        const newProfits = newCurrentAmount - wallet.invested;
 
         // Calcula o novo profitPercentage
         const newProfitPercentage =
-          wallet.invested > 0 ? (newProfits / wallet.invested) * 100 : 0;
+          wallet.invested > 0 ? (newProfits * 100) / wallet.invested : 0;
 
         // Atualiza a carteira
         await tx.wallet.update({
           where: { id: user.activeWallet },
           data: {
             currentAmount: newCurrentAmount,
-            profits: newCurrentAmount - wallet.invested,
-            profitPercentage: (newProfitPercentage + 100) * -1,
+            profits: newProfits - 100,
+            profitPercentage: newProfitPercentage,
           },
         });
       });
