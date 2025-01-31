@@ -20,6 +20,7 @@ export function BuyTicketForm({
       currentPrice: number;
       logo: string;
       name: string;
+      type: string;
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     any,

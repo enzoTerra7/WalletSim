@@ -12,6 +12,7 @@ export const ExchangeTicketSchema = y.object({
   currentPrice: y.number().required(),
   logo: y.string().required(),
   name: y.string().required(),
+  type: y.string().optional().default("stock"),
 });
 
 export const DeleteWalletSchema = y.object({

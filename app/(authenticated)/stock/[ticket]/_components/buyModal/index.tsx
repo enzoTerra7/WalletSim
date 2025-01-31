@@ -20,6 +20,7 @@ export interface SellModalProps {
   ticket: string;
   name: string;
   logo: string;
+  type?: string;
 }
 
 type SellTicketForm = y.InferType<typeof ExchangeTicketSchema>;
@@ -34,6 +35,7 @@ export function BuyModal(props: SellModalProps) {
       quantity: 1,
       logo: props.logo,
       name: props.name,
+      type: props.type || "stock",
     },
   });
 

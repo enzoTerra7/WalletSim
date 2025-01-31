@@ -12,6 +12,7 @@ type WalletCard = {
   averagePrice: number;
   quantity: number;
   profitPercentage: number;
+  type: string;
 };
 
 export function MyStocksCards(props: WalletCard) {
@@ -21,7 +22,11 @@ export function MyStocksCards(props: WalletCard) {
   );
   return (
     <Link
-      href={`/stock/${props.ticket}`}
+      href={
+        props.type === "crypto"
+          ? `/crypto/currency/${props.ticket}`
+          : `/stock/${props.ticket}`
+      }
       className="w-full hover:bg-muted hover:text-muted-foreground transition-all duration-300 p-6 rounded-lg border border-border bg-card shadow flex items-center gap-4"
     >
       {props.logo ? (

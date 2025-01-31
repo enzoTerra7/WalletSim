@@ -8,6 +8,7 @@ model Stocks {
   profitPercentage Float  @default(0)
   profit           Float  @default(0)
   logo             String @default("")
+  type             String @default("stocks")
   wallet           Wallet @relation(fields: [walletId], references: [id], onDelete: Cascade)
   walletId         Int
 

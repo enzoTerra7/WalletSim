@@ -18,10 +18,12 @@ export function Pagination(props: Pagination) {
     page: props.page,
     total: props.count,
   });
+
+  const showing = props.limit * (props.page - 1) + 1;
   return (
     <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
       <p className="text-[#495057] text-sm font-medium">
-        Exibindo {props.limit * (props.page - 1) + 1} de {props.count}
+        Exibindo {showing} - {showing + props.limit - 1} de {props.count}
       </p>
       <div className={cn("flex items-center gap-1")}>
         <Button

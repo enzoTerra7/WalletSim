@@ -1,4 +1,9 @@
-import { LayoutDashboard, ShoppingBag, WalletMinimal } from "lucide-react";
+import {
+  Bitcoin,
+  LayoutDashboard,
+  ShoppingBag,
+  WalletMinimal,
+} from "lucide-react";
 import { ElementType } from "react";
 
 export type NavigationItem = {
@@ -24,6 +29,12 @@ export const navigationItems: NavigationItem[] = [
     name: "Mercado",
     href: "/market",
     icon: ShoppingBag,
+    partial: true,
+  },
+  {
+    name: "Criptomoedas",
+    href: "/crypto",
+    icon: Bitcoin,
     partial: true,
   },
 ];

@@ -94,6 +94,7 @@ export const walletRouter = router({
         ticket: true,
         quantity: true,
         logo: true,
+        type: true,
       },
       orderBy: {
         id: "asc",
@@ -161,6 +162,7 @@ export const walletRouter = router({
               profitPercentage: 0,
               profit: 0,
               walletId: ctx.activeWalletId,
+              type: input.type,
             },
           });
 
