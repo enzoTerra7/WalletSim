@@ -95,6 +95,9 @@ export const walletRouter = router({
         quantity: true,
         logo: true,
       },
+      orderBy: {
+        id: "asc",
+      },
     });
 
     return {

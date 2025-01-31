@@ -47,7 +47,7 @@ export function WalletCard(props: {
         {props.name}
       </p>
       <div className={cn("flex items-center gap-2", textClass)}>
-        {formatCurrency(props.invested || 0)}
+        {formatCurrency(props.currentAmount || 0)}
         <Icon className="size-4 shrink-0" />
       </div>
     </div>
