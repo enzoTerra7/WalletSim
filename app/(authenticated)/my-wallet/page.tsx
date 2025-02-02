@@ -7,6 +7,7 @@ import { Banknote, ChartCandlestick, DollarSign, Percent } from "lucide-react";
 import { MyStocksList } from "./_components/stocksList";
 import { EmptyStocks } from "./_components/emptyStocks";
 import { DeleteWalletButton } from "./_components/deleteWallet";
+import { MyWalletGraph } from "./_components/graph";
 
 export default async function MyWalletPage() {
   const { getUser } = GetUserAuthentication();
@@ -65,6 +66,8 @@ export default async function MyWalletPage() {
           currentAmount={wallet.Stocks.length || 0}
         />
       </div>
+
+      <MyWalletGraph />
 
       <h1 className="text-2xl mt-4 text-foreground font-medium">Seus ativos</h1>
       {wallet.Stocks.length > 0 ? <MyStocksList /> : <EmptyStocks />}

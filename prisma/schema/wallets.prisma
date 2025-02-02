@@ -1,15 +1,27 @@
 model Wallet {
-  id               Int      @id @default(autoincrement())
+  id               Int             @id @default(autoincrement())
   name             String
-  user             Users    @relation(fields: [usersId], references: [id], onDelete: Cascade)
+  user             Users           @relation(fields: [usersId], references: [id], onDelete: Cascade)
   usersId          Int
   Stocks           Stocks[]
   availableCash    Float
-  monthlyAport     Float    @default(0)
-  currentAmount    Float    @default(0)
-  profits          Float    @default(0)
-  invested         Float    @default(0)
-  profitPercentage Float    @default(0)
+  monthlyAport     Float           @default(0)
+  currentAmount    Float           @default(0)
+  profits          Float           @default(0)
+  invested         Float           @default(0)
+  profitPercentage Float           @default(0)
+  WalletHistory    WalletHistory[]
 
   @@map(name: "wallets")
+}
+
+model WalletHistory {
+  id    Int    @id @default(autoincrement())
+  price Int    @default(0)
+  // SELIC Int    @default(0)
+  // IPCA  Int    @default(0)
+  day   String
+
+  wallet   Wallet @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  walletId Int
 }
