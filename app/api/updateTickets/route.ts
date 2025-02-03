@@ -85,6 +85,7 @@ export async function GET() {
       });
     }
 
+    fetch("/api/updateWalletHistory", { method: "GET" });
     return Response.json({ message: "Tickets updated" }, { status: 200 });
   } catch (error) {
     console.error("Error updating tickets:", error);
