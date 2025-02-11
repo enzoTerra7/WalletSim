@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { api } from "@/lib/axios";
 import { StockByIdResponse } from "@/trpc/routes/tickets/types";
-import axios from "axios";
+import { GET as updateWalletHistory } from "../updateWalletHistory/route";
 
 export async function GET() {
   try {
@@ -85,11 +85,9 @@ export async function GET() {
         });
       });
     }
-
-    axios.get("https://wallet-sim.vercel.app/api/updateWalletHistory");
+    updateWalletHistory();
     return Response.json({ message: "Tickets updated" }, { status: 200 });
   } catch (error) {
-    console.error("Error updating tickets:", error);
     return Response.json(
       { message: "Tickets not updated", error: error },
       { status: 500 }

@@ -30,7 +30,6 @@ export function RegisterWalletForm() {
       router.push("/dashboard");
     },
     onError(error) {
-      console.log(error);
       toast.error(error.message);
     },
   });
@@ -88,10 +87,7 @@ export function RegisterWalletForm() {
           }}
         />
 
-        <Button
-          isLoading={isLoading}
-          className="mt-2.5"
-        >
+        <Button isLoading={isLoading} className="mt-2.5">
           Cadastrar
         </Button>
       </form>

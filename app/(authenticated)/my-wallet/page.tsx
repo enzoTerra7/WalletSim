@@ -26,8 +26,6 @@ export default async function MyWalletPage() {
     wallet.currentAmount
   );
 
-  console.log("wallet", wallet);
-
   return (
     <main className="w-full flex items-start justify-start flex-col gap-8 py-16 xl:px-28">
       <DeleteWalletButton walletId={wallet.id} />

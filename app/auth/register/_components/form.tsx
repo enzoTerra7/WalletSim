@@ -30,7 +30,6 @@ export function RegisterForm() {
       router.push("/auth/wallet-create");
     },
     onError(error) {
-      console.log(error);
       toast.error(error.message);
     },
   });
