@@ -1,7 +1,6 @@
 import { db } from "@/db";
 import { api } from "@/lib/axios";
 import { StockByIdResponse } from "@/trpc/routes/tickets/types";
-import { GET as updateWalletHistory } from "../updateWalletHistory/route";
 
 export async function GET() {
   try {
@@ -85,7 +84,6 @@ export async function GET() {
         });
       });
     }
-    updateWalletHistory();
     return Response.json({ message: "Tickets updated" }, { status: 200 });
   } catch (error) {
     return Response.json(
